@@ -1,0 +1,30 @@
+version: 2.1
+
+orbs:
+  win: circleci/windows@5.0.0
+
+jobs:
+  test_mac:
+    macos:
+      xcode: 14.0.0
+      resource_class: macos.medium
+
+    steps:
+      - run: sudo systemsetup -settimezone Asia/Tokyo
+
+  test_win:
+    executor:
+      name: win/server-2019
+      size: Medium
+
+    working_directory: c:/project
+
+    steps:
+      - run: tzutil /s "Tokyo Standard Time"
+
+      - run: wmic path Win32_VideoController get VideoModeDescription,CurrentVerticalResolution,CurrentHorizontalResolution /format:value
+
+workflows:
+  job-workflow:
+    jobs:
+      - test_win
